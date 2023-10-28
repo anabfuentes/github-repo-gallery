@@ -4,6 +4,10 @@ const overview = document.querySelector(".overview");
 const username = "anabfuentes";
 //selects the unordered list that displays the repos list
 const repoList = document.querySelector(".repo-list");
+//selects section where all repo information appears
+const reposContainer = document.querySelector(".repos");
+//selects where the repo data will appear
+const repoData = document.querySelector(".repo-data");
 
 const profileInfo = async function () {
     const res = await fetch(`https://api.github.com/users/${username}`);
@@ -52,3 +56,9 @@ const repoInfo = function (repos) {
     }
 };
 
+repoList.addEventListener("click", function (e) {
+    if (e.target.matches("h3")) {
+        const repoName = repoList.innerText;
+        console.log(repoName);
+    }
+});
