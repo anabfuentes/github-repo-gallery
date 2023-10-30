@@ -9,9 +9,11 @@ const reposContainer = document.querySelector(".repos");
 //selects where the repo data will appear
 const repoData = document.querySelector(".repo-data");
 
+
+
 const profileInfo = async function () {
-    const res = await fetch(`https://api.github.com/users/${username}`);
-    const data = await res.json();
+    const userInfo = await fetch(`https://api.github.com/users/${username}`);
+    const data = await userInfo.json();
     
     //console.log(data);
     displayProfileInfo(data);
@@ -21,9 +23,9 @@ profileInfo();
 
 
 const displayProfileInfo = function (data) {
-    let userInfoDiv = document.createElement("div");
-    userInfoDiv.classList.add("user-info");
-    userInfoDiv.innerHTML = `
+    const div = document.createElement("div");
+    div.classList.add("user-info");
+    div.innerHTML = `
     <figure>
     <img alt="user avatar" src=${data.avatar_url} />
   </figure>
@@ -33,7 +35,7 @@ const displayProfileInfo = function (data) {
     <p><strong>Location:</strong> ${data.location}</p>
     <p><strong>Number of public repos:</strong> ${data.public_repos}</p>
   </div>`;
-  overview.append(userInfoDiv);
+  overview.append(div);
   getRepos();
 };
 
@@ -41,16 +43,14 @@ const displayProfileInfo = function (data) {
 const getRepos = async function () {
     const fetchRepos = await fetch(`https://api.github.com/users/${username}/repos?type=owner&sort=updated&direction=desc&per_page=100`);
     const repoData = await fetchRepos.json();
-    repoInfo(repoData);
+    showInfo(repoData);
 
 };  
 
-getRepos();
-
-const repoInfo = function (repos) {
+const showInfo = function (repos) {
     for (const repo of repos) {
-        let repoLi = document.createElement("li");
-        repoLi.classList.add(".repo");
+        const repoLi = document.createElement("li");
+        repoLi.classList.add("repo");
         repoLi.innerHTML = `<h3>${repo.name}</h3>`;
         repoList.append(repoLi);
     }
@@ -59,7 +59,7 @@ const repoInfo = function (repos) {
 repoList.addEventListener("click", function (e) {
     if (e.target.matches("h3")) {
         const repoName = e.target.innerText;
-        console.log(repoList);
+        getRepoInfo(repoName);
     }
 });
 
@@ -73,8 +73,22 @@ const getRepoInfo = async function (repoName) {
     const languages = [];
 for (const language in languageData) {
     languages.push(language);
-    console.log(languages);
+
 }
+    showRepoInfo(repoInfo, languages);
+};
 
-
+const showRepoInfo = function (repoInfo, languages) {
+  repoData.innerHTML = "";
+  repoData.classList.remove("hide");
+  reposContainer.classList.add("hide");
+  const div = document.createElement("div");
+  div.innerHTML = `
+    <h3>Name: ${repoInfo.name}</h3>
+    <p>Description: ${repoInfo.description}</p>
+    <p>Default Branch: ${repoInfo.default_branch}</p>
+    <p>Languages: ${languages.join(", ")}</p>
+    <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>
+  `;
+  repoData.append(div);
 };
