@@ -8,6 +8,10 @@ const repoList = document.querySelector(".repo-list");
 const reposContainer = document.querySelector(".repos");
 //selects where the repo data will appear
 const repoData = document.querySelector(".repo-data");
+//selects "back to repo gallery" button
+const backButton = document.querySelector(".view-repos");
+//selects the input with "search by name" placeholder
+const filterInput = document.querySelector(".filter-repos");
 
 
 
@@ -48,6 +52,7 @@ const getRepos = async function () {
 };  
 
 const showInfo = function (repos) {
+    filterInput.classList.remove("hide");
     for (const repo of repos) {
         const repoLi = document.createElement("li");
         repoLi.classList.add("repo");
@@ -91,4 +96,18 @@ const showRepoInfo = function (repoInfo, languages) {
     <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on GitHub!</a>
   `;
   repoData.append(div);
+  backButton.classList.remove("hide");
 };
+
+backButton.addEventListener("click", function () {
+    reposContainer.classList.remove("hide");
+    repoData.classList.add("hide");
+    backButton.classList.add("hide");
+
+})
+
+filterInput.addEventListener("input", function (e) {
+    const search = filterInput.value;
+    const repos = document.querySelectorAll("repo");
+
+})
